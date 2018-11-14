@@ -232,6 +232,50 @@ def get_signin_vcode(cookie, codeString):
 
         return vcode_path
 
+def send_email_verfication(authtoken):
+	url = ''.join([
+		PASSPORT_BASE,
+		'authwidgetverify'
+		])
+	params={'authtoken': urlparse.unquote(authtoken.decode()),
+			'type': 'email',
+			'apiver': 'v3',
+			'action': 'send',
+			'vcode': '',
+			'questionAndAnswer': '',
+			'needsid': '',
+			'rsakey': '',
+			'countrycode': '',
+			'subpro': '',
+			'callback': '',
+			'tpl': 'mn',
+			'u': 'https://www.baidu.com/'
+			}
+	ev_resp = requests.get(url, params=params)
+	return ev_resp
+	
+def send_email_verification_code(authtoken, emailVCode, loginproxy):
+	url = ''.join([
+		PASSPORT_BASE,
+		'authwidgetverify'
+		])
+	params={'authtoken': urlparse.unquote(authtoken.decode()),
+			'type': 'email',
+			'apiver': 'v3',
+			'action': 'check',
+			'vcode': emailVCode,
+			'questionAndAnswer': '',
+			'needsid': '',
+			'rsakey': '',
+			'countrycode': '',
+			'subpro': '',
+			'callback': ''
+			}
+	vresp = requests.get(url, params=params)
+	if vresp.ok:
+		proxyResq = requests.get(urlparse.unquote(loginproxy.decode()))
+	return proxyResq
+
 
 def get_refresh_codeString(cookie, tokens, vcodetype):
     url = ''.join([
